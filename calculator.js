@@ -1,5 +1,8 @@
 var currentVariable = []
-var storeVariable = ""
+var showVariable = ""
+var tempVariable = []
+
+
 
 //x = [1, "+" , 1]
 //console.log (eval(x.join("")))
@@ -8,11 +11,11 @@ var storeVariable = ""
 
 
 
-function showPartAnswer(letter) {
+function showScreenAnswer(letter) {  //takes the letter and puts it on the screen only if it is a number
 
-    storeVariable = storeVariable + letter
-    document.getElementById("answer").value = storeVariable
-    //takes the letter and adds it to storeVariable only if it is a number
+    showVariable = showVariable + letter
+    document.getElementById("answer").value = showVariable
+    
 
 
 }
@@ -20,21 +23,53 @@ function showPartAnswer(letter) {
 
 
 function showAnswer(x){
-    if (typeof x == "number"){
+    var lastVar
+    if (typeof x === "number" || x == '.'){ // if number
         document.getElementById("answer").value = x
-        showPartAnswer(x)
+        showScreenAnswer(x)
+        tempVariable.push(x)
     }
 
-    else{
-        document.getElementById("answer").value = null
-        storeVariable =""
-        //can change this to at the top of the button if storeVariable[-1] is not [1-9] then delete it
 
+    
+
+    else{ // if letter
+        //could check if the last thing is also not a letter then pop it maybe do a while loop?
+        showVariable =""
+        Array.prototype.push.apply(currentVariable, tempVariable)
+
+        lastVar = currentVariable.slice(-1)[0]
+        if (typeof lastVar !== "number" && typeof lastVar !== "undefined" && x != '.'){
+            currentVariable.pop()
+        
+    
+    
+        }
+
+
+
+        console.log(lastVar)
+
+
+
+        tempVariable = []
+        tempVariable.push(x)
+
+
+        // if (typeof lastVar !== "number" && typeof lastVar !== "undefined"){
+        //     console.log("popping" + lastVar)
+        //     currentVariable.pop()
+        //     tempVariable.pop()
+        //     console.log("after pop " + currentVariable)
+    
+
+        // }
     }
-    //if typeof does not number clear the storeVariable
-    currentVariable.push(x)
-    console.log(currentVariable)
-    console.log(storeVariable)
+    
+    //console.log(currentVariable.slice(-1)[0]) //finds the last thing in array
+    console.log("this is our temp value " + tempVariable)
+    console.log("this is our screen value " + showVariable)
+    console.log("this is our total value " + currentVariable)
     
     
     return
@@ -43,19 +78,23 @@ function showAnswer(x){
 }
 
 function equals(){
-    
-    answer = eval(currentVariable.join(""))
+    console.log("this is our temp value " + tempVariable)
+    console.log("this is our screen value " + showVariable)
+    console.log("this is our total value " + currentVariable)
+    Array.prototype.push.apply(currentVariable, tempVariable);
+
+
+    try {
+        answer = eval(currentVariable.join(""))
+      }
+      catch(err) {
+        errPress()
+      }
+
     if (typeof answer == "number"){
         document.getElementById("answer").value = answer
     }
-
-
-    storeVariable =""
-    currentVariable = []
-
-
-    console.log(currentVariable)
-    console.log(storeVariable)
+    resetCalc()
     
     return
     
@@ -63,15 +102,46 @@ function equals(){
 
 }
 
-function showNon(){
+
+function errPress(){
+
+    document.getElementById("answer").value = "NAN"
+    resetCalc()
+    return
+
+
+}
+
+function acPress(){
 
     document.getElementById("answer").value = null
-    storeVariable =""
+    resetCalc()
+
+    console.log("this is our temp value " + tempVariable)
+    console.log("this is our screen value " + showVariable)
+    console.log("this is our total value " + currentVariable)
+
+    return
+
+
+}
+
+
+function cePress(){
+    tempVariable =[]
+    showVariable = ""
+    document.getElementById("answer").value = null
+
+
+    return
+}
+
+function resetCalc(){
+    showVariable =""
     currentVariable = []
+    tempVariable = []
 
-    console.log(currentVariable)
-    console.log(storeVariable)
-
+    return
 
 }
 
